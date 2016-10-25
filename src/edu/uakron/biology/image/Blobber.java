@@ -1,15 +1,36 @@
 package edu.uakron.biology.image;
 
+import java.awt.Color;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Blobber {
-    public static List<ArrayList<Point>> blob(final List<Point> arr) {
+    private static ArrayList<Point> extractPoints(final BufferedImage image, final Color c) {
+        final ArrayList<Point> p = new ArrayList<>();
+        final int rgb = c.getRGB();
+        for (int x = 0; x < image.getWidth(); x++) {
+            for (int y = 0; y < image.getHeight(); y++) {
+                if (image.getRGB(x, y) == rgb) p.add(new Point(x, y));
+            }
+        }
+        return p;
+    }
+
+    public static List<ArrayList<Point>> blob(final BufferedImage image, final Color c) {
+        return blob(extractPoints(image, c));
+    }
+
+    public static List<ArrayList<Point>> blob(final BufferedImage image, final Color c, final double dist) {
+        return blob(extractPoints(image, c), dist);
+    }
+
+    private static List<ArrayList<Point>> blob(final List<Point> arr) {
         return blob(arr, Math.sqrt(3));
     }
 
-    public static List<ArrayList<Point>> blob(final List<Point> arr, final double dist) {
+    private static List<ArrayList<Point>> blob(final List<Point> arr, final double dist) {
         final List<ArrayList<Point>> result = new ArrayList<>();
         final int l = arr.size() - 1;
         if (l < 0) return result;
