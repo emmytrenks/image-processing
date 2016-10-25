@@ -6,7 +6,19 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Blobber
+ * <p>
+ * This is a class which provides static utilities involved in blobbing points together.
+ */
 public class Blobber {
+    /**
+     * extractPoints takes in an image and extracts the points from the image that match the specified color.
+     *
+     * @param image the {@code BufferedImage} to examine
+     * @param c     the {@code Color} to extract from the image
+     * @return a {@code List} of {@code Point}s from the image
+     */
     private static ArrayList<Point> extractPoints(final BufferedImage image, final Color c) {
         final ArrayList<Point> p = new ArrayList<>();
         final int rgb = c.getRGB();
@@ -18,18 +30,38 @@ public class Blobber {
         return p;
     }
 
+    /**
+     * @param image the {@code BufferedImage} to examine
+     * @param c     the {@code Color} to blob in the image
+     * @return a {@code List} of {@code List}s which contain the blobbed points
+     */
     public static List<ArrayList<Point>> blob(final BufferedImage image, final Color c) {
         return blob(extractPoints(image, c));
     }
 
+    /**
+     * @param image the {@code BufferedImage} to examine
+     * @param c     the {@code Color} to blob in the image
+     * @param dist  the distance to blob points within
+     * @return a {@code List} of {@code List}s which contain the blobbed points
+     */
     public static List<ArrayList<Point>> blob(final BufferedImage image, final Color c, final double dist) {
         return blob(extractPoints(image, c), dist);
     }
 
+    /**
+     * @param arr the {@code List} of {@code Point}s to blob
+     * @return a {@code List} of {@code List}s which contain the blobbed points
+     */
     private static List<ArrayList<Point>> blob(final List<Point> arr) {
         return blob(arr, Math.sqrt(3));
     }
 
+    /**
+     * @param arr  the {@code List} of {@code Point}s to blob
+     * @param dist the distance to blob points within
+     * @return a {@code List} of {@code List}s which contain the blobbed points
+     */
     private static List<ArrayList<Point>> blob(final List<Point> arr, final double dist) {
         final List<ArrayList<Point>> result = new ArrayList<>();
         final int l = arr.size() - 1;
