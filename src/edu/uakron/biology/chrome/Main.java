@@ -60,7 +60,7 @@ public class Main extends JFrame {
             try {
                 final BufferedImage image = ImageIO.read(file);
                 if (image == null) return;
-                labelFile.setText(file.getAbsolutePath());
+                labelFile.setText(file.getName());
                 Main.this.image.set(image);
                 SwingUtilities.invokeLater(display::repaint);
             } catch (final IOException ignored) {
