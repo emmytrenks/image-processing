@@ -1,14 +1,15 @@
 package edu.uakron.biology.chrome;
 
 import edu.uakron.biology.image.Blobber;
+import edu.uakron.biology.image.QuickHull;
 
 import javax.swing.JComponent;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class ImagePanel extends JComponent implements MouseListener {
@@ -28,12 +29,25 @@ public class ImagePanel extends JComponent implements MouseListener {
 
     @Override
     public void paintComponent(final Graphics g) {
-        final BufferedImage image = this.image.get();
+        BufferedImage image = this.image.get();
         if (image == null) return;
+        image = Blobber.clone(image);
+        final Graphics gr = image.getGraphics();
         final Color color = this.color.get();
         if (color != null) {
-            Blobber.highlightHSL(image, color, 0.8f, 0.8f, 5f, Color.white, Color.black);
+            final BufferedImage high = Blobber.clone(image);
+            System.out.println("Highlighting image ...");
+            Blobber.highlightHSL(high, color, 0.8f, 0.8f, 12f, Color.white, Color.black);
+            System.out.println("Blobbing points and removing insignificants ...");
+            final List<ArrayList<Point>> lists = Blobber.removeLowerThan(Blobber.blob(high, Color.white, 5), 10);
+            System.out.println("Found " + lists.size() + " blobs ...");
+            for (final ArrayList<Point> list : lists) {
+                final Polygon p = QuickHull.generate(list);
+                gr.setColor(Color.red);
+                gr.drawPolygon(p);
+            }
         }
+        gr.dispose();
         final Image r = image.getScaledInstance(w, h, Image.SCALE_SMOOTH);
         this.drawn = r;
         g.drawImage(r, 0, 0, null);

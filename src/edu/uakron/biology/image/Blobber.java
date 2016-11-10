@@ -3,6 +3,8 @@ package edu.uakron.biology.image;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,13 @@ import java.util.List;
  * This is a class which provides static utilities involved in blobbing points together.
  */
 public class Blobber {
+    public static BufferedImage clone(final BufferedImage image) {
+        final ColorModel cm = image.getColorModel();
+        final boolean b = cm.isAlphaPremultiplied();
+        final WritableRaster r = image.copyData(image.getRaster().createCompatibleWritableRaster());
+        return new BufferedImage(cm, r, b, null);
+    }
+
     public static void highlightHSL(final BufferedImage image, final Color color, final float h_mod, final float s_mod, final float tolerance, final Color foreground, final Color background) {
         final int[] m_hsl = new int[3];
         ColorUtils.RGBtoHSL(color.getRed(), color.getGreen(), color.getBlue(), m_hsl);
