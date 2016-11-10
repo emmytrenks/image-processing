@@ -12,6 +12,33 @@ import java.util.List;
  * This is a class which provides static utilities involved in blobbing points together.
  */
 public class Blobber {
+    public static void highlightHSL(final BufferedImage image, final Color color, final float h_mod, final float s_mod, final float tolerance, final Color foreground, final Color background) {
+        final int[] m_hsl = new int[3];
+        ColorUtils.RGBtoHSL(color.getRed(), color.getGreen(), color.getBlue(), m_hsl);
+        final int w = image.getWidth(), h = image.getHeight();
+        for (int x = 0; x < w; x++) {
+            for (int y = 0; y < h; y++) {
+                final int rgb = image.getRGB(x, y);
+                final int red = (rgb >> 16) & 0xff, green = (rgb >> 8) & 0xff, blue = rgb & 0xff;
+                final int[] ints = new int[3];
+                ColorUtils.RGBtoHSL(red, green, blue, ints);
+                final boolean match = Math.abs(ints[0] - m_hsl[0]) <= h_mod * tolerance &&
+                        Math.abs(ints[1] - m_hsl[1]) <= s_mod * tolerance &&
+                        Math.abs(ints[2] - m_hsl[2]) < tolerance;
+                image.setRGB(x, y, (match ? foreground : background).getRGB());
+            }
+        }
+    }
+
+    public static List<ArrayList<Point>> removeLowerThan(final List<ArrayList<Point>> lists, final int min_req) {
+        final List<ArrayList<Point>> lists2 = new ArrayList<>();
+        for (final ArrayList<Point> list : lists) {
+            if (list.size() < min_req) continue;
+            lists2.add(list);
+        }
+        return lists2;
+    }
+
     /**
      * extractPoints takes in an image and extracts the points from the image that match the specified color.
      *
