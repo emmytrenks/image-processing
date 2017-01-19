@@ -37,11 +37,13 @@ public class ImagePanel extends JComponent implements MouseListener {
         if (color != null) {
             final BufferedImage high = Blobber.clone(image);
             System.out.println("Highlighting image ...");
-            Blobber.highlightHSL(high, color, 0.8f, 0.8f, 12f, Color.white, Color.black);
-            System.out.println("Blobbing points and removing insignificants ...");
-            final List<ArrayList<Point>> lists = Blobber.removeLowerThan(Blobber.blob(high, Color.white, 5), 10);
+            Blobber.highlightHSL(high, color, 0.8f, 0.8f, 30f, Color.white, Color.black);
+            System.out.println("Blobbing points and removing insignificant blobs ...");
+            final List<ArrayList<Point>> lists = Blobber.removeLowerThan(Blobber.blob(high, Color.white), 1);
             System.out.println("Found " + lists.size() + " blobs ...");
+            int count = 1;
             for (final ArrayList<Point> list : lists) {
+                System.out.println("Generating convex hull for blob " + (count++) + "/" + lists.size() + ".");
                 final Polygon p = QuickHull.generate(list);
                 gr.setColor(Color.red);
                 gr.drawPolygon(p);
@@ -65,10 +67,7 @@ public class ImagePanel extends JComponent implements MouseListener {
     public void mouseReleased(MouseEvent e) {
         final int x = e.getX(), y = e.getY();
         if (drawn == null) return;
-        final BufferedImage dimg = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        Graphics g = dimg.createGraphics();
-        g.drawImage(drawn, 0, 0, null);
-        g.dispose();
+        final BufferedImage dimg = getBuffered(drawn);
         color.set(new Color(dimg.getRGB(x, y)));
         getRootPane().repaint();
     }
@@ -79,5 +78,17 @@ public class ImagePanel extends JComponent implements MouseListener {
 
     @Override
     public void mouseExited(MouseEvent e) {
+    }
+
+    private BufferedImage getBuffered(Image image) {
+        final BufferedImage dimg = new BufferedImage(
+                image.getWidth(null),
+                image.getHeight(null),
+                BufferedImage.TYPE_INT_ARGB
+        );
+        Graphics g = dimg.createGraphics();
+        g.drawImage(image, 0, 0, null);
+        g.dispose();
+        return dimg;
     }
 }
