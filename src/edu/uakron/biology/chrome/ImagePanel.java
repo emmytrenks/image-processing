@@ -1,6 +1,7 @@
 package edu.uakron.biology.chrome;
 
 import edu.uakron.biology.image.Blobber;
+import edu.uakron.biology.image.Concave;
 import edu.uakron.biology.image.QuickHull;
 
 import javax.swing.JComponent;
@@ -44,8 +45,12 @@ public class ImagePanel extends JComponent implements MouseListener {
             int count = 1;
             for (final ArrayList<Point> list : lists) {
                 System.out.println("Generating convex hull for blob " + (count++) + "/" + lists.size() + ".");
-                final Polygon p = QuickHull.generate(list);
+                Polygon p = QuickHull.generate(list);
                 gr.setColor(Color.red);
+                gr.drawPolygon(p);
+                System.out.println("Generating concave hull ...");
+                p = Concave.hull(p, list, 20);
+                gr.setColor(Color.blue);
                 gr.drawPolygon(p);
             }
         }
