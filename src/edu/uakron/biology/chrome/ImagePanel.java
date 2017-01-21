@@ -40,7 +40,7 @@ public class ImagePanel extends JComponent implements MouseListener {
             System.out.println("Highlighting image ...");
             Blobber.highlightHSL(high, color, 0.8f, 0.8f, 30f, Color.white, Color.black);
             System.out.println("Blobbing points and removing insignificant blobs ...");
-            final List<ArrayList<Point>> lists = Blobber.removeLowerThan(Blobber.blob(high, Color.white), 1);
+            final List<ArrayList<Point>> lists = Blobber.removeLowerThan(Blobber.blob(high, Color.white), 20);
             System.out.println("Found " + lists.size() + " blobs ...");
             int count = 1;
             for (final ArrayList<Point> list : lists) {

@@ -2,7 +2,10 @@ package edu.uakron.biology.image;
 
 import java.awt.Point;
 import java.awt.Polygon;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class Concave {
     private static double MAX_CONCAVE_ANGLE_COS = Math.cos(90.0 / (180.0 / Math.PI)); // angle = 90 deg
