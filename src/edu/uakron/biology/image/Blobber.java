@@ -126,7 +126,7 @@ public class Blobber {
                 t1++;
             }
             c++;
-            System.out.println("Blobbed " + ec + "/" + (l + 1) + " points.");
+            //System.out.println("Blobbed " + ec + "/" + (l + 1) + " points.");
         }
         return result;
     }
